@@ -1,4 +1,5 @@
 require "bundler/setup"
+require "byebug"
 require "lite_record"
 
 RSpec.configure do |config|
