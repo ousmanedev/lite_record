@@ -17,6 +17,10 @@ module LiteRecord
         new(data_hash(data).merge('id' => id))
       end
 
+      def find(id)
+        new(DB.get_first_row("SELECT * from #{table} where id = ?", id))
+      end
+      
       private
 
       def keys

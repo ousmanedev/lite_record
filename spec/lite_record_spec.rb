@@ -18,7 +18,19 @@ RSpec.describe LiteRecord do
     it "succesffuly creates a record" do
       user = User.create('name' => 'john', 'email' => 'john@example.com')
 
-      expect(db.get_first_row('SELECT * from users order by id desc limit 1;')).to eq(user.attributes)
+      expect(
+        db.get_first_row('SELECT * from users order by id desc limit 1;')
+      ).to eq(user.attributes)
+    end
+  end
+
+  describe "find" do
+    it "successfully finds a record with id" do
+      id = User.create('name' => 'john', 'email' => 'john@example.com').attributes['id']
+
+      expect(
+        db.get_first_row('SELECT * from users order by id desc limit 1;')
+      ).to eq(User.find(id).attributes)
     end
   end
 end
