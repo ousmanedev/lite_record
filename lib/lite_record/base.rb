@@ -1,11 +1,6 @@
-require 'sqlite3'
-
 module LiteRecord
   class Base
-    DB = SQLite3::Database.new(
-      LiteRecord.configuration.database_path,
-      results_as_hash: true
-    )
+    DB = LiteRecord.connection
 
     class << self
       attr_accessor :table

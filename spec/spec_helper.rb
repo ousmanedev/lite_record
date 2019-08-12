@@ -13,6 +13,4 @@ RSpec.configure do |config|
   end
 end
 
-LiteRecord.configure do |c|
-  c.database_path = 'test.db'
-end
+LiteRecord.configure('test.db')

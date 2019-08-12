@@ -1,15 +1,14 @@
+require 'sqlite3'
 require 'lite_record/version'
-require 'lite_record/configuration'
 
 module LiteRecord
   class << self
-    attr_accessor :configuration
+    attr_accessor :connection
   end
 
   autoload :Base, 'lite_record/base'
 
-  def self.configure
-    self.configuration ||= Configuration.new
-    yield(configuration)
+  def self.configure(path)
+    self.connection = SQLite3::Database.new(path, results_as_hash: true)
   end
 end
