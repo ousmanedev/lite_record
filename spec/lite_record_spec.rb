@@ -33,4 +33,14 @@ RSpec.describe LiteRecord do
       ).to eq(User.find(id).attributes)
     end
   end
+
+  describe "count" do
+    it "successfully counts the number of records" do
+      (1..5).each do |i|
+        User.create('name' => "john#{i}", 'email' => "john#{i}@example.com")
+      end
+
+      expect(5).to eq(User.count)
+    end
+  end
 end

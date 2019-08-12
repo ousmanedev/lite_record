@@ -21,6 +21,10 @@ module LiteRecord
         new(DB.get_first_row("SELECT * from #{table} where id = ?", id))
       end
       
+      def count
+        DB.get_first_value("SELECT count(id) from #{table}")
+      end
+
       private
 
       def keys
