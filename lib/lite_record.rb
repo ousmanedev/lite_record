@@ -6,6 +6,8 @@ module LiteRecord
     attr_accessor :configuration
   end
 
+  autoload :Base, 'lite_record/base'
+
   def self.configure
     self.configuration ||= Configuration.new
     yield(configuration)
