@@ -1,5 +1,9 @@
 RSpec.describe LiteRecord do
   let(:db) { LiteRecord::Base::DB }
+  
+  def create_user
+    User.create('name' => 'john', 'email' => 'john@example.com')
+  end
 
   class User < LiteRecord::Base
     self.table = 'users'
@@ -16,7 +20,7 @@ RSpec.describe LiteRecord do
 
   describe "create" do
     it "succesffuly creates a record" do
-      user = User.create('name' => 'john', 'email' => 'john@example.com')
+      user = create_user
 
       expect(
         db.get_first_row('SELECT * from users order by id desc limit 1;')
@@ -26,7 +30,7 @@ RSpec.describe LiteRecord do
 
   describe "find" do
     it "successfully finds a record with id" do
-      id = User.create('name' => 'john', 'email' => 'john@example.com').attributes['id']
+      id = create_user.attributes['id']
 
       expect(
         db.get_first_row('SELECT * from users order by id desc limit 1;')
@@ -36,11 +40,9 @@ RSpec.describe LiteRecord do
 
   describe "count" do
     it "successfully counts the number of records" do
-      (1..5).each do |i|
-        User.create('name' => "john#{i}", 'email' => "john#{i}@example.com")
-      end
-
-      expect(5).to eq(User.count)
+      5.times { create_user }
+      
+      expect(User.count).to eq(5)
     end
   end
 end
