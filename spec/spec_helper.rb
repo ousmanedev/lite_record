@@ -12,3 +12,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+LiteRecord.configure do |c|
+  c.database_path = 'test.db'
+end
