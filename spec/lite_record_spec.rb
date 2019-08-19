@@ -45,4 +45,26 @@ RSpec.describe LiteRecord do
       expect(User.count).to eq(5)
     end
   end
+
+  describe "save" do
+    it "successfully create an object" do
+      user = User.new('name' => 'tester', 'email' => 'test@lite_record.com')
+      user.save
+
+      expect(
+        db.get_first_row('SELECT name, email from users order by id desc limit 1;')
+      ).to eq(user.attributes)
+    end
+
+    it "successfully update an object" do
+      user = create_user
+
+      user['name'] = 'paul'
+      user.save
+
+      expect(
+        db.get_first_value('SELECT name from users order by id desc limit 1;')
+      ).to eq('paul')
+    end
+  end
 end

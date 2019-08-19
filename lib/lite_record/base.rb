@@ -59,5 +59,29 @@ module LiteRecord
     def initialize(attributes)
       @attributes = attributes
     end
+
+    def save
+      return self.class.create(attributes) if self['id'].nil?
+      
+      DB.execute("UPDATE #{self.class.table} SET #{update_fields} WHERE id = #{self['id']}")
+      
+      true
+    end
+
+    def [](key)
+      attributes[key.to_s]
+    end
+
+    def []=(key, value)
+      attributes[key.to_s] = value
+    end
+
+    private
+
+    def update_fields
+      attributes.map do |key, value|
+        "#{key} = #{self.class.send(:sql_value, value)}"
+      end.join(',')
+    end
   end
 end
