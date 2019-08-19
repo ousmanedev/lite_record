@@ -67,4 +67,16 @@ RSpec.describe LiteRecord do
       ).to eq('paul')
     end
   end
+
+  describe "destroy" do
+    it "successfully destroy an object" do
+      user = create_user
+
+      user.destroy
+
+      expect(
+        db.get_first_row("SELECT * from users where id = #{user['id']}")
+      ).to eq(nil)
+    end
+  end
 end

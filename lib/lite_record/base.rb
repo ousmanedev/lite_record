@@ -68,6 +68,10 @@ module LiteRecord
       true
     end
 
+    def destroy
+      DB.execute("DELETE FROM #{self.class.table} WHERE id = #{self['id']}")
+    end
+
     def [](key)
       attributes[key.to_s]
     end
