@@ -7,14 +7,13 @@ module LiteRecord
 
       def create(data)
         data.delete('id')
-        columns = keys.join(',')
-        values = sql_values(data).join(',')
+        columns = table_columns.join(',')
+        values = table_columns.map { |c| convert(data[c]) }.join(',')
 
         DB.execute("INSERT into #{table}(#{columns}) values(#{values})")
-
         id = DB.get_first_value("SELECT last_insert_rowid() from #{table}")
 
-        new(data_hash(data).merge('id' => id))
+        new(table_columns.map { |c| [c, data[c]] }.to_h.merge('id' => id))
       end
 
       def find(id)
@@ -26,24 +25,12 @@ module LiteRecord
       end
 
       private
-
-      def keys
-        @keys ||= table_columns - ['id']
-      end
-
-      def sql_values(data)
-        keys.map { |k| sql_value(data[k]) }
-      end
-
-      def data_hash(data)
-        keys.map { |k| [k, data[k]] }.to_h
-      end
-
+      
       def table_columns
-        @table_columns ||= DB.table_info(table).map { |r| r['name'] }
+        @table_columns ||= (DB.table_info(table).map { |r| r['name'] } - ['id'])
       end
 
-      def sql_value(value)
+      def convert(value)
         if value.nil?
           'null'
         elsif value.is_a?(String)
@@ -84,7 +71,7 @@ module LiteRecord
 
     def update_fields
       attributes.map do |key, value|
-        "#{key} = #{self.class.send(:sql_value, value)}"
+        "#{key} = #{self.class.send(:convert, value)}"
       end.join(',')
     end
   end
